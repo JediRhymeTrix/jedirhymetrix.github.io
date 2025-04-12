@@ -57,15 +57,20 @@
     --bs-black-rgb: 0, 0, 0;
     --bs-body-color-rgb: 33, 37, 41;
     --bs-body-bg-rgb: 255, 255, 255;
-    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --bs-font-sans-serif: 'Saira Extra Condensed', sans-serif;
     --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --bs-gradient: linear-gradient( 180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
     --bs-body-font-family: Muli, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-    --bs-body-font-size: 1rem;
+    --bs-body-font-size: 1.25rem;
     --bs-body-font-weight: 400;
     --bs-body-line-height: 1.5;
     --bs-body-color: #acbac9;
     --bs-body-bg: #181a1b;
+    --cyberpunk-bg: #262236;
+    --cyberpunk-text: #e0e0e0;
+    --cyberpunk-pink: #FB1A9A;
+    --cyberpunk-blue: #00ffff;
+    --cyberpunk-yellow: #ffcc00;
 }
 
 *,
@@ -82,15 +87,73 @@
 
 body {
     margin: 0;
-    font-family: var(--bs-body-font-family);
+    font-family: 'Saira Extra Condensed', sans-serif;
     font-size: var(--bs-body-font-size);
     font-weight: var(--bs-body-font-weight);
     line-height: var(--bs-body-line-height);
-    color: var(--bs-body-color);
+    color: var(--cyberpunk-text) !important;
     text-align: var(--bs-body-text-align);
-    background-color: var(--bs-body-bg);
+    background-color: var(--cyberpunk-bg);
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.container-fluid.p-0,
+.d-none.d-lg-block {
+    animation: fadeInBlur 1.3s ease-out forwards, glitch .5s 2;
+}
+
+@keyframes fadeInBlur {
+    0% {
+        filter: blur(60px);
+        opacity: 0;
+        box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+    }
+    100% {
+        filter: blur(0px);
+        opacity: 1;
+        box-shadow: 0 0 0 rgba(255, 0, 255, 0);
+    }
+}
+
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+    }
+    10% {
+        transform: translate(-2px, 2px);
+    }
+    20% {
+        transform: translate(2px, -2px);
+    }
+    30% {
+        transform: translate(-2px, -2px);
+    }
+    40% {
+        transform: translate(2px, 2px);
+    }
+    50% {
+        transform: translate(0);
+    }
+    60% {
+        transform: translate(-2px, 2px);
+    }
+    70% {
+        transform: translate(2px, -2px);
+    }
+    80% {
+        transform: translate(-2px, -2px);
+    }
+    90% {
+        transform: translate(2px, 2px);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+div#foreground {
+    z-index: 1;
 }
 
 hr {
@@ -99,6 +162,34 @@ hr {
     background-color: currentColor;
     border: 0;
     opacity: 0.25;
+    position: relative;
+    overflow: hidden;
+}
+
+hr::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Make the pseudo-element twice as wide so it contains two identical copies of the gradient */
+    width: 200%;
+    height: 100%;
+    /* Define the gradient with the colors sequence repeated twice
+       so that the right half exactly matches the left – this guarantees that as we slide over one copy,
+       the hr is always fully covered by the gradient */
+    background: linear-gradient(90deg, var(--cyberpunk-pink), var(--cyberpunk-blue), var(--cyberpunk-yellow), var(--cyberpunk-pink), var(--cyberpunk-blue), var(--cyberpunk-yellow));
+    animation: animateHr 3s linear infinite reverse;
+}
+
+@keyframes animateHr {
+    /* Animate a continuous leftward scroll by shifting by exactly 50% of the pseudo-element’s width
+       (i.e. one full copy of the gradient). Since both halves are identical, there’s never a gap. */
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
 }
 
 hr:not([size]) {
@@ -122,7 +213,7 @@ h1,
     font-family: "Saira Extra Condensed", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     font-weight: 700;
     line-height: 1.2;
-    color: #343a40;
+    color: var(--cyberpunk-pink);
 }
 
 h1,
@@ -180,7 +271,7 @@ h5,
 
 h6,
 .h6 {
-    font-size: 1rem;
+    font-size: rem;
 }
 
 p {
@@ -268,12 +359,13 @@ sup {
 }
 
 a {
-    color: #0076ce;
-    text-decoration: underline;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 a:hover {
-    color: #0076ce;
+    color: var(--cyberpunk-pink);
+    text-shadow: 0 0 5px var(--cyberpunk-pink), 0 0 10px var(--cyberpunk-pink), 0 0 15px var(--cyberpunk-pink);
 }
 
 a:not([href]):not([class]),
@@ -394,6 +486,28 @@ textarea {
 button,
 select {
     text-transform: none;
+}
+
+button,
+.btn {
+    background-color: var(--cyberpunk-pink);
+    border: none;
+    color: var(--cyberpunk-bg);
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+    box-shadow: 0 0 5px var(--cyberpunk-pink), 0 0 10px var(--cyberpunk-pink), 0 0 15px var(--cyberpunk-pink);
+    transition: background-color 0.3s ease;
+}
+
+button:hover,
+.btn:hover {
+    background-color: var(--cyberpunk-blue);
 }
 
 [role="button"] {
@@ -533,7 +647,7 @@ progress {
 }
 
 .lead {
-    font-size: 1.25rem;
+    font-size: var(--bs-body-font-size) !important;
     font-weight: 300;
 }
 
@@ -621,6 +735,11 @@ progress {
 
 .list-inline-item {
     display: inline-block;
+}
+
+.list-inline-item:hover {
+    color: var(--cyberpunk-pink);
+    filter: drop-shadow(0 0 1px var(--cyberpunk-pink)) drop-shadow(0 0 2px var(--cyberpunk-pink));
 }
 
 .list-inline-item:not(:last-child) {
@@ -4356,6 +4475,9 @@ fieldset:disabled .btn {
     justify-content: space-between;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+    background-color: #241B30;
+    border-bottom: 2px solid var(--cyberpunk-pink);
+    font-size: 1.5rem;
 }
 
 .navbar>.container,
@@ -4842,7 +4964,7 @@ fieldset:disabled .btn {
 
 .navbar-dark .navbar-nav .nav-link:hover,
 .navbar-dark .navbar-nav .nav-link:focus {
-    color: rgba(255, 255, 255, 0.75);
+    color: var(--cyberpunk-pink);
 }
 
 .navbar-dark .navbar-nav .nav-link.disabled {
@@ -4851,7 +4973,7 @@ fieldset:disabled .btn {
 
 .navbar-dark .navbar-nav .show>.nav-link,
 .navbar-dark .navbar-nav .nav-link.active {
-    color: #fff;
+    color: var(--cyberpunk-blue);
 }
 
 .navbar-dark .navbar-toggler {
@@ -8317,7 +8439,7 @@ fieldset:disabled .btn {
 
 .text-primary {
     --bs-text-opacity: 1;
-    color: #de684d !important;
+    color: var(--cyberpunk-blue);
 }
 
 .text-secondary {
@@ -9069,6 +9191,26 @@ fieldset:disabled .btn {
     .text-sm-center {
         text-align: center !important;
     }
+}
+
+@keyframes wipeUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+span.d-block.d-lg-none.text-primary {
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+}
+
+span.d-block.d-lg-none.text-primary.visible {
+    animation: wipeUp 0.5s forwards;
 }
 
 @media (min-width: 768px) {
@@ -11137,6 +11279,7 @@ h6,
 h1,
 .h1 {
     line-height: 1;
+    text-shadow: 0 0 2px var(--cyberpunk-pink), 0 0 4px var(--cyberpunk-pink);
 }
 
 p.lead {
@@ -11148,7 +11291,7 @@ p.lead {
     font-family: "Saira Extra Condensed", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     text-transform: uppercase;
     font-weight: 500;
-    font-size: 1.5rem;
+    font-size: 1.75rem;
 }
 
 #sideNav {
@@ -11185,9 +11328,20 @@ p.lead {
         padding: 0.5rem;
     }
     #sideNav .navbar-brand .img-profile {
-        max-width: 10rem;
-        max-height: 10rem;
-        border: 0.5rem solid rgba(255, 255, 255, 0.2);
+        /* max-width: 15rem; */
+        max-height: 15rem;
+        border-radius: 50%;
+        transition: box-shadow 0.3s ease-in-out;
+        /* Ensure transition is applied */
+        box-shadow: none;
+        /* Start with no shadow */
+    }
+    #sideNav .navbar-brand .img-profile.initial-shadow {
+        box-shadow: 0 0 5px var(--cyberpunk-pink), 0 0 10px var(--cyberpunk-blue);
+    }
+    #sideNav .navbar-brand .img-profile:hover {
+        box-shadow: 0 0 40px var(--cyberpunk-pink), 0 0 20px var(--cyberpunk-blue);
+        /* Ensure hover effect is defined */
     }
     #sideNav .navbar-collapse {
         display: flex;
@@ -11226,33 +11380,43 @@ p.lead {
 }
 
 .social-icons .social-icon:hover {
-    background-color: #bd5d38;
+    background-color: var(--cyberpunk-pink);
+    color: var(--cyberpunk-blue);
+    box-shadow: 0 0 4px var(--cyberpunk-blue), 0 0 16px var(--cyberpunk-blue);
 }
 
 .dev-icons {
     font-size: 3rem;
 }
 
+.dev-icons:hover {
+    color: var(--cyberpunk-blue);
+    cursor: pointer;
+}
+
 section.resume-section {
+    position: relative;
     display: flex;
     align-items: center;
     padding-left: 1rem;
     padding-right: 1rem;
     padding-top: 5rem;
     padding-bottom: 5rem;
+    margin-top: -1px;
+    margin-bottom: 1px;
     max-width: 75rem;
 }
 
+
+}
 section.resume-section .resume-section-content {
     width: 100%;
 }
-
 @media (min-width: 768px) {
     section.resume-section {
         min-height: 100vh;
     }
 }
-
 @media (min-width: 992px) {
     section.resume-section {
         padding-left: 3rem;
@@ -11262,9 +11426,7 @@ section.resume-section .resume-section-content {
     }
 }
 
-
 /* CSS for the modal and its content */
-
 .modal-container {
     display: none;
     position: fixed;
@@ -11273,8 +11435,8 @@ section.resume-section .resume-section-content {
     right: 0;
     bottom: 0;
     z-index: 99999;
+    background-color: rgba(13, 13, 13, 0.9);
 }
-
 .modal-overlay {
     position: fixed;
     width: 100%;
@@ -11283,7 +11445,6 @@ section.resume-section .resume-section-content {
     left: 0;
     background: rgba(0, 0, 0, 0.5);
 }
-
 .modal-unity {
     position: absolute;
     top: 50%;
@@ -11296,7 +11457,6 @@ section.resume-section .resume-section-content {
     padding: 20px;
     overflow: auto;
 }
-
 .close-modal {
     position: absolute;
     top: 10px;
@@ -11306,10 +11466,84 @@ section.resume-section .resume-section-content {
     cursor: pointer;
 }
 
-
 /* CSS for the game window */
-
 #game {
     width: 100%;
     height: 100%;
+}
+@keyframes fall {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    
+    50% {
+        opacity: 1;
+    }
+    
+    100% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+.falling-code {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.25;
+    overflow: hidden;
+    z-index: 0;
+    /* Behind other content */
+}
+.code-line {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--cyberpunk-blue), var(--cyberpunk-pink), var(--cyberpunk-yellow), transparent);
+    animation: fall 5s linear infinite;
+    opacity: 0.1;
+}
+.code-line:nth-child(1) {
+    left: 10%;
+    animation-delay: 0s;
+}
+.code-line:nth-child(2) {
+    left: 20%;
+    animation-delay: 1s;
+}
+.code-line:nth-child(3) {
+    left: 30%;
+    animation-delay: 2s;
+}
+.code-line:nth-child(4) {
+    left: 40%;
+    animation-delay: 3s;
+}
+.code-line:nth-child(5) {
+    left: 50%;
+    animation-delay: 4s;
+}
+.code-line:nth-child(6) {
+    left: 60%;
+    animation-delay: 5s;
+}
+.code-line:nth-child(7) {
+    left: 70%;
+    animation-delay: 6s;
+}
+.code-line:nth-child(8) {
+    left: 80%;
+    animation-delay: 7s;
+}
+.code-line:nth-child(9) {
+    left: 90%;
+    animation-delay: 8s;
+}
+.code-line:nth-child(10) {
+    left: 100%;
+    animation-delay: 9s;
 }

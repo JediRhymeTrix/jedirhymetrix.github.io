@@ -96,43 +96,54 @@ window.addEventListener("DOMContentLoaded", event => {
     }
   });
 
+  // Profile picture wink state and functions (moved outside setTimeout for media query access)
+  let isWinkActive = false;
+  let isWinking = false;
+
+  function doWink(duration = 250, force = false) {
+    const profileNormal = document.querySelector("#profile-normal");
+    const profileWink = document.querySelector("#profile-wink");
+    if (!profileNormal || !profileWink) return;
+    if (!force && (isWinking || isWinkActive)) return;
+    isWinking = true;
+    profileNormal.style.display = "none";
+    profileWink.style.display = "block";
+    setTimeout(() => {
+      profileNormal.style.display = "block";
+      profileWink.style.display = "none";
+      isWinking = false;
+    }, duration);
+  }
+
+  function startWink() {
+    const profileNormal = document.querySelector("#profile-normal");
+    const profileWink = document.querySelector("#profile-wink");
+    if (!profileNormal || !profileWink) return;
+    isWinkActive = true;
+    profileNormal.style.display = "none";
+    profileWink.style.display = "block";
+  }
+
+  function stopWink() {
+    const profileNormal = document.querySelector("#profile-normal");
+    const profileWink = document.querySelector("#profile-wink");
+    if (!profileNormal || !profileWink) return;
+    isWinkActive = false;
+    profileNormal.style.display = "block";
+    profileWink.style.display = "none";
+  }
+
   setTimeout(function () {
-    const imgProfile = document.querySelector(
-      "#sideNav .navbar-brand .img-profile",
-    );
-    if (imgProfile) {
-      imgProfile.classList.add("initial-shadow");
-
-      // Track if anything is triggering a wink
-      let isWinkActive = false;
-      let isWinking = false;
-
-      // Function to trigger a quick wink
-      function doWink(duration = 250) {
-        if (isWinking || isWinkActive) return; // Prevent overlapping winks and don't interrupt active wink
-        isWinking = true;
-        imgProfile.src = "assets/img/profile_alt.png";
-        setTimeout(() => {
-          imgProfile.src = "assets/img/profile.png";
-          isWinking = false;
-        }, duration);
-      }
-
-      // Function to start constant wink
-      function startWink() {
-        isWinkActive = true;
-        imgProfile.src = "assets/img/profile_alt.png";
-      }
-
-      // Function to stop constant wink
-      function stopWink() {
-        isWinkActive = false;
-        imgProfile.src = "assets/img/profile.png";
-      }
+    const profileNormal = document.querySelector("#profile-normal");
+    const profileWink = document.querySelector("#profile-wink");
+    if (profileNormal) {
+      profileNormal.classList.add("initial-shadow");
 
       // Add image swap on hover over profile pic
-      imgProfile.addEventListener("mouseenter", startWink);
-      imgProfile.addEventListener("mouseleave", stopWink);
+      profileNormal.addEventListener("mouseenter", startWink);
+      profileNormal.addEventListener("mouseleave", stopWink);
+      profileWink.addEventListener("mouseenter", startWink);
+      profileWink.addEventListener("mouseleave", stopWink);
 
       // Add constant wink on hover for links and buttons (excluding navbar)
       const links = document.querySelectorAll("a:not(#sideNav a):not(nav a)");
@@ -241,4 +252,34 @@ window.addEventListener("DOMContentLoaded", event => {
     },
     { passive: true },
   );
-};);
+
+  // Helper function to trigger power-up animation on h1 elements
+  const triggerPowerUpAnimation = () => {
+    h1Elements.forEach(el => {
+      el.classList.remove("neon-powerup");
+      // Force reflow to reset animation
+      void el.offsetWidth;
+      el.classList.add("neon-powerup");
+    });
+  };
+
+  // Animate viewport change with same timing as page load (account for blur fade duration: 1.3s)
+  const handleViewportAnimation = (isDesktop) => {
+    setTimeout(() => {
+      triggerPowerUpAnimation();
+      if (isDesktop) {
+        doWink(250, true);
+      }
+    }, 1300);
+  };
+
+  // Trigger animations when viewport changes between mobile and larger screens
+  window.matchMedia(BREAKPOINTS.md).addEventListener("change", () => {
+    handleViewportAnimation(window.matchMedia(BREAKPOINTS.lg).matches);
+  });
+
+  // Trigger animations when viewport changes to/from desktop
+  window.matchMedia(BREAKPOINTS.lg).addEventListener("change", e => {
+    handleViewportAnimation(e.matches);
+  });
+});

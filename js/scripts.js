@@ -58,45 +58,30 @@ window.addEventListener("DOMContentLoaded", event => {
         ".d-block.d-lg-none.text-primary"
     );
 
-    // Scroll through text to simulate a bootup sequence in a console
-    const bootupSequence = [
-        "Booting up...",
-        "Loading modules...",
-        "Initializing systems...",
-        "Starting services...",
-        "Ready.",
-    ];
-
-    function simulateBootup() {
-        let index = 0;
-        const normalDelay = 200;
-        const finalDelay = normalDelay * 2; // Last step lasts twice as long
+    // Animate bootup sequence for mobile text (only on mobile, where mobileText is visible)
+    const isMobile = window.getComputedStyle(mobileText).display !== "none";
+    
+    if (isMobile) {
+        const originalText = mobileText.textContent;
+        
+        // Remove visible class initially
         mobileText.classList.remove("visible");
-        originalText = mobileText.textContent;
-
-        function showNext() {
-            if (index < bootupSequence.length) {
-                mobileText.textContent = bootupSequence[index];
-                mobileText.classList.add("visible");
-
-                let delay =
-                    index === bootupSequence.length - 1
-                        ? finalDelay
-                        : normalDelay;
-                index++;
-                setTimeout(showNext, delay);
-            } else {
-                // When the sequence ends, always replace the text with the original
-                mobileText.classList.remove("visible");
-                mobileText.textContent = originalText;
-            }
-        }
-
-        setTimeout(showNext, 500);
+        
+        // Start animation with 500ms delay on mobile
+        setTimeout(() => {
+            animateBootupSequence(
+                (text) => {
+                    mobileText.textContent = text;
+                    mobileText.classList.add("visible");
+                },
+                () => {
+                    // When sequence ends, restore original text
+                    mobileText.classList.remove("visible");
+                    mobileText.textContent = originalText;
+                }
+            );
+        }, 500);
     }
-
-    // Call the function to simulate the bootup sequence
-    simulateBootup();
 
     // Show header text only after the navbar covers the h1 element and hide it when h1 is back in view
     window.addEventListener("scroll", () => {

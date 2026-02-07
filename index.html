@@ -16,6 +16,51 @@
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.14.0/devicon.min.css" />
+    <!-- Bootup sequence shared constants and functions -->
+    <script>
+        const BOOTUP_SEQUENCE = [
+            "Booting up...",
+            "Loading modules...",
+            "Initializing systems...",
+            "Starting services...",
+            "Ready.",
+        ];
+        const BOOTUP_TIMING = {
+            normalDelay: 200,
+            finalDelay: 400, // normalDelay * 2
+            startDelay: 0
+        };
+
+        // Generic bootup animation function
+        function animateBootupSequence(updateCallback, onComplete) {
+            let index = 0;
+            const { normalDelay, finalDelay } = BOOTUP_TIMING;
+
+            function showNext() {
+                if (index < BOOTUP_SEQUENCE.length) {
+                    const currentText = BOOTUP_SEQUENCE[index];
+                    updateCallback(currentText);
+
+                    const delay = index === BOOTUP_SEQUENCE.length - 1 ? finalDelay : normalDelay;
+                    index++;
+                    setTimeout(showNext, delay);
+                } else {
+                    if (onComplete) onComplete();
+                }
+            }
+
+            showNext();
+        }
+
+        // Start title cycling immediately on desktop only (check viewport >= 992px, Bootstrap lg breakpoint)
+        if (window.innerWidth >= 992) {
+            const originalTitle = document.title;
+            animateBootupSequence(
+                (text) => { document.title = text; },
+                () => { document.title = originalTitle; }
+            );
+        }
+    </script>
 </head>
 
 <body id="page-top">

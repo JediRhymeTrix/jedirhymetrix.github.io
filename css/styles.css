@@ -11280,6 +11280,26 @@ h1,
 .h1 {
     line-height: 1;
     text-shadow: 0 0 2px var(--cyberpunk-pink), 0 0 4px var(--cyberpunk-pink);
+    position: relative;
+    z-index: 10;
+    animation: cyberpunkFlicker 3s infinite;
+}
+
+@keyframes cyberpunkFlicker {
+    0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+        text-shadow: 
+            0 0 2px var(--cyberpunk-pink),
+            0 0 4px var(--cyberpunk-pink),
+            0 0 8px var(--cyberpunk-pink),
+            0 0 12px var(--cyberpunk-blue);
+        opacity: 1;
+    }
+    20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+        text-shadow: 
+            0 0 1px var(--cyberpunk-pink),
+            0 0 2px var(--cyberpunk-pink);
+        opacity: 0.8;
+    }
 }
 
 p.lead {

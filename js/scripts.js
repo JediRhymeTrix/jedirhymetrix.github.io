@@ -122,6 +122,9 @@ window.addEventListener("DOMContentLoaded", event => {
     isWinkActive = true;
     profileNormal.style.display = "none";
     profileWink.style.display = "block";
+    // Apply enhanced shadow on hover-triggered winks
+    profileNormal.classList.add("enhanced-shadow");
+    profileWink.classList.add("enhanced-shadow");
   }
 
   function stopWink() {
@@ -131,6 +134,9 @@ window.addEventListener("DOMContentLoaded", event => {
     isWinkActive = false;
     profileNormal.style.display = "block";
     profileWink.style.display = "none";
+    // Remove enhanced shadow when hover ends
+    profileNormal.classList.remove("enhanced-shadow");
+    profileWink.classList.remove("enhanced-shadow");
   }
 
   setTimeout(function () {

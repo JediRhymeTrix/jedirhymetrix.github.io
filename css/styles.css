@@ -11479,6 +11479,9 @@ p.lead {
     #sideNav .navbar-brand .img-profile.initial-shadow {
         box-shadow: 0 0 5px var(--cyberpunk-pink), 0 0 10px var(--cyberpunk-blue);
     }
+    #sideNav .navbar-brand .img-profile.enhanced-shadow {
+        box-shadow: 0 0 40px var(--cyberpunk-pink), 0 0 20px var(--cyberpunk-blue);
+    }
     #sideNav .navbar-brand .img-profile:hover {
         box-shadow: 0 0 40px var(--cyberpunk-pink), 0 0 20px var(--cyberpunk-blue);
         /* Ensure hover effect is defined */

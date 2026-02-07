@@ -117,7 +117,61 @@ window.addEventListener("DOMContentLoaded", event => {
             "#sideNav .navbar-brand .img-profile"
         );
         if (imgProfile) {
-            imgProfile.classList.add("initial-shadow");
+          imgProfile.classList.add("initial-shadow");
+
+          // Track if anything is triggering a wink
+          let isWinkActive = false;
+          let isWinking = false;
+
+          // Function to trigger a quick wink
+          function doWink(duration = 250) {
+            if (isWinking || isWinkActive) return; // Prevent overlapping winks and don't interrupt active wink
+            isWinking = true;
+            imgProfile.src = "assets/img/profile_alt.png";
+            setTimeout(() => {
+              imgProfile.src = "assets/img/profile.png";
+              isWinking = false;
+            }, duration);
+          }
+
+          // Function to start constant wink
+          function startWink() {
+            isWinkActive = true;
+            imgProfile.src = "assets/img/profile_alt.png";
+          }
+
+          // Function to stop constant wink
+          function stopWink() {
+            isWinkActive = false;
+            imgProfile.src = "assets/img/profile.png";
+          }
+
+          // Add image swap on hover over profile pic
+          imgProfile.addEventListener("mouseenter", startWink);
+          imgProfile.addEventListener("mouseleave", stopWink);
+
+          // Add constant wink on hover for links and buttons (excluding navbar)
+          const links = document.querySelectorAll(
+            "a:not(#sideNav a):not(nav a)",
+          );
+          const buttons = document.querySelectorAll(
+            "button:not(#sideNav button):not(nav button)",
+          );
+
+          links.forEach(el => {
+            el.addEventListener("mouseenter", startWink);
+            el.addEventListener("mouseleave", stopWink);
+          });
+
+          buttons.forEach(el => {
+            el.addEventListener("mouseenter", startWink);
+            el.addEventListener("mouseleave", stopWink);
+          });
+
+          // Automatic wink after blur fades out (1.3s) - 250ms duration
+          setTimeout(() => {
+            doWink(250);
+          }, 300); // 300ms after this timeout (which is at 1s), so total 1.3s
         }
     }, 1000); // Delay in milliseconds (1 second)
 

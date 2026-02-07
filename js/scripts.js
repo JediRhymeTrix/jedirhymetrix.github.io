@@ -120,4 +120,54 @@ window.addEventListener("DOMContentLoaded", event => {
             imgProfile.classList.add("initial-shadow");
         }
     }, 1000); // Delay in milliseconds (1 second)
+
+    // Flicker control: pause animation on hover, touch, and scroll
+    const h1Elements = document.querySelectorAll("h1, .h1");
+    let scrollTimeout;
+    let isScrolling = false;
+
+    function pauseFlicker() {
+        h1Elements.forEach(el => el.classList.add("flicker-paused"));
+    }
+
+    function resumeFlicker() {
+        h1Elements.forEach(el => el.classList.remove("flicker-paused"));
+    }
+
+    // Hover events (desktop)
+    h1Elements.forEach(h1 => {
+        h1.addEventListener("mouseenter", pauseFlicker);
+        h1.addEventListener("mouseleave", () => {
+            if (!isScrolling) {
+                resumeFlicker();
+            }
+        });
+
+        // Touch events (mobile)
+        h1.addEventListener("touchstart", pauseFlicker);
+        h1.addEventListener("touchend", () => {
+            if (!isScrolling) {
+                resumeFlicker();
+            }
+        });
+    });
+
+    // Scroll event
+    window.addEventListener("scroll", () => {
+        isScrolling = true;
+        pauseFlicker();
+
+        // Clear existing timeout
+        clearTimeout(scrollTimeout);
+
+        // Resume after scrolling stops (150ms delay)
+        scrollTimeout = setTimeout(() => {
+            isScrolling = false;
+            // Only resume if not hovering
+            const isHovering = Array.from(h1Elements).some(el => el.matches(':hover'));
+            if (!isHovering) {
+                resumeFlicker();
+            }
+        }, 150);
+    });
 });

@@ -126,6 +126,9 @@ window.addEventListener("DOMContentLoaded", event => {
     let scrollTimeout;
     let isScrolling = false;
     let isHovering = false;
+    
+    // Add power-up animation after initial blur finishes (1.3s fadeInBlur)
+    h1Elements.forEach(el => el.classList.add("neon-powerup"));
 
     function pauseFlicker() {
         h1Elements.forEach(el => el.classList.add("flicker-paused"));
@@ -135,12 +138,33 @@ window.addEventListener("DOMContentLoaded", event => {
         h1Elements.forEach(el => el.classList.remove("flicker-paused"));
     }
 
-    // Hover events (desktop)
+    // Hover events (desktop) - only trigger when cursor is over actual text
     h1Elements.forEach(h1 => {
-        h1.addEventListener("mouseenter", () => {
-            isHovering = true;
-            pauseFlicker();
+        h1.addEventListener("mousemove", (e) => {
+            // Get the text dimensions using range
+            const range = document.createRange();
+            range.selectNodeContents(h1);
+            const textRect = range.getBoundingClientRect();
+            
+            // Check if cursor is within text bounds
+            const isOverText = (
+                e.clientX >= textRect.left &&
+                e.clientX <= textRect.right &&
+                e.clientY >= textRect.top &&
+                e.clientY <= textRect.bottom
+            );
+            
+            if (isOverText && !isHovering) {
+                isHovering = true;
+                pauseFlicker();
+            } else if (!isOverText && isHovering) {
+                isHovering = false;
+                if (!isScrolling) {
+                    resumeFlicker();
+                }
+            }
         });
+        
         h1.addEventListener("mouseleave", () => {
             isHovering = false;
             if (!isScrolling) {

@@ -125,6 +125,7 @@ window.addEventListener("DOMContentLoaded", event => {
     const h1Elements = document.querySelectorAll("h1, .h1");
     let scrollTimeout;
     let isScrolling = false;
+    let isHovering = false;
 
     function pauseFlicker() {
         h1Elements.forEach(el => el.classList.add("flicker-paused"));
@@ -136,20 +137,24 @@ window.addEventListener("DOMContentLoaded", event => {
 
     // Hover events (desktop)
     h1Elements.forEach(h1 => {
-        h1.addEventListener("mouseenter", pauseFlicker);
+        h1.addEventListener("mouseenter", () => {
+            isHovering = true;
+            pauseFlicker();
+        });
         h1.addEventListener("mouseleave", () => {
+            isHovering = false;
             if (!isScrolling) {
                 resumeFlicker();
             }
         });
 
         // Touch events (mobile)
-        h1.addEventListener("touchstart", pauseFlicker);
+        h1.addEventListener("touchstart", pauseFlicker, { passive: true });
         h1.addEventListener("touchend", () => {
             if (!isScrolling) {
                 resumeFlicker();
             }
-        });
+        }, { passive: true });
     });
 
     // Scroll event
@@ -164,10 +169,9 @@ window.addEventListener("DOMContentLoaded", event => {
         scrollTimeout = setTimeout(() => {
             isScrolling = false;
             // Only resume if not hovering
-            const isHovering = Array.from(h1Elements).some(el => el.matches(':hover'));
             if (!isHovering) {
                 resumeFlicker();
             }
         }, 150);
-    });
+    }, { passive: true });
 });

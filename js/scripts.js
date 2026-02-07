@@ -136,8 +136,9 @@ window.addEventListener("DOMContentLoaded", event => {
   setTimeout(function () {
     const profileNormal = document.querySelector("#profile-normal");
     const profileWink = document.querySelector("#profile-wink");
-    if (profileNormal) {
+    if (profileNormal && profileWink) {
       profileNormal.classList.add("initial-shadow");
+      profileWink.classList.add("initial-shadow");
 
       // Add image swap on hover over profile pic
       profileNormal.addEventListener("mouseenter", startWink);

@@ -11279,10 +11279,22 @@ h6,
 h1,
 .h1 {
     line-height: 1;
-    text-shadow: 0 0 2px var(--cyberpunk-pink), 0 0 4px var(--cyberpunk-pink);
     position: relative;
     z-index: 1000;
-    animation: cyberpunkFlicker 2s infinite;
+    text-shadow: none;
+    opacity: 1;
+}
+
+/* Initial power-up state */
+h1.neon-powerup,
+.h1.neon-powerup {
+    animation: neonPowerUp 1.4s 0.3s ease-out forwards, cyberpunkFlicker 3.5s 1.5s infinite;
+}
+
+/* Normal state after initial load */
+h1.neon-active,
+.h1.neon-active {
+    animation: cyberpunkFlicker 3.5s infinite;
 }
 
 h1.flicker-paused,
@@ -11291,35 +11303,121 @@ h1.flicker-paused,
 }
 
 @keyframes cyberpunkFlicker {
-    0%, 5%, 7%, 12%, 15%, 23%, 27%, 31%, 37%, 42%, 47%, 52%, 57%, 63%, 68%, 73%, 78%, 84%, 89%, 95%, 100% {
+    /* Steady glow - most of the time */
+    0%, 2%, 5%, 10%, 15%, 20%, 25%, 30%, 35%, 40%, 45%, 50%, 55%, 60%, 65%, 72%, 77%, 82%, 87%, 92%, 97%, 100% {
         text-shadow: 
             0 0 2px var(--cyberpunk-pink),
             0 0 4px var(--cyberpunk-pink),
             0 0 8px var(--cyberpunk-pink),
-            0 0 16px var(--cyberpunk-pink);
+            0 0 14px var(--cyberpunk-pink);
         opacity: 1;
     }
-    5.5%, 13%, 24%, 38%, 48%, 58%, 69%, 79%, 90% {
+    
+    /* Quick micro-flickers (barely noticeable dips) */
+    2.5%, 10.5%, 20.5%, 40.5%, 60.5%, 82.5% {
+        text-shadow: 
+            0 0 2px var(--cyberpunk-pink),
+            0 0 3px var(--cyberpunk-pink),
+            0 0 6px var(--cyberpunk-pink);
+        opacity: 0.85;
+    }
+    
+    /* Brief power dips */
+    5.5%, 30.5%, 77.5% {
         text-shadow: 
             0 0 1px var(--cyberpunk-pink),
             0 0 2px var(--cyberpunk-pink);
-        opacity: 0.6;
+        opacity: 0.5;
     }
-    6%, 14%, 25%, 39%, 49%, 59%, 70%, 80%, 91% {
+    
+    /* Very short blackout (realistic neon stutter) */
+    6% {
+        text-shadow: 
+            0 0 1px var(--cyberpunk-pink);
+        opacity: 0.2;
+    }
+    
+    /* Quick recovery flicker */
+    6.3% {
+        text-shadow: 
+            0 0 2px var(--cyberpunk-pink),
+            0 0 5px var(--cyberpunk-pink);
+        opacity: 0.7;
+    }
+    
+    /* Rare intensity surge (like voltage spike) */
+    67% {
+        text-shadow: 
+            0 0 3px var(--cyberpunk-pink),
+            0 0 6px var(--cyberpunk-pink),
+            0 0 12px var(--cyberpunk-pink),
+            0 0 20px var(--cyberpunk-pink),
+            0 0 28px var(--cyberpunk-pink);
+        opacity: 1;
+    }
+}
+
+@keyframes neonPowerUp {
+    0% {
+        text-shadow: 
+            0 0 0px var(--cyberpunk-pink);
+        opacity: 0;
+    }
+    /* Quick initial flicker */
+    8% {
         text-shadow: 
             0 0 1px var(--cyberpunk-pink),
-            0 0 3px var(--cyberpunk-pink),
-            0 0 6px var(--cyberpunk-pink);
-        opacity: 0.8;
+            0 0 2px var(--cyberpunk-pink);
+        opacity: 0.2;
     }
-    /* Rare intense glow spikes */
-    33%, 85% {
+    /* Brief stutter */
+    12% {
+        text-shadow: none;
+        opacity: 0.05;
+    }
+    /* Rapid ramp up begins */
+    20% {
         text-shadow: 
             0 0 4px var(--cyberpunk-pink),
+            0 0 8px var(--cyberpunk-pink),
+            0 0 12px var(--cyberpunk-pink);
+        opacity: 0.7;
+    }
+    /* Bigger ramp up */
+    32% {
+        text-shadow: 
             0 0 8px var(--cyberpunk-pink),
             0 0 16px var(--cyberpunk-pink),
             0 0 24px var(--cyberpunk-pink),
             0 0 32px var(--cyberpunk-pink);
+        opacity: 1;
+    }
+    /* MASSIVE SPIKE - peak brightness and glow */
+    50% {
+        text-shadow: 
+            0 0 12px var(--cyberpunk-pink),
+            0 0 24px var(--cyberpunk-pink),
+            0 0 36px var(--cyberpunk-pink),
+            0 0 48px var(--cyberpunk-pink),
+            0 0 60px var(--cyberpunk-pink),
+            0 0 80px var(--cyberpunk-pink);
+        opacity: 1;
+    }
+    /* Quick dramatic rolloff */
+    65% {
+        text-shadow: 
+            0 0 6px var(--cyberpunk-pink),
+            0 0 12px var(--cyberpunk-pink),
+            0 0 20px var(--cyberpunk-pink);
+        opacity: 1;
+    }
+    /* Settle to steady glow */
+    85%, 100% {
+        text-shadow: 
+            0 0 2px var(--cyberpunk-pink),
+            0 0 4px var(--cyberpunk-pink),
+            0 0 8px var(--cyberpunk-pink),
+            0 0 14px var(--cyberpunk-pink);
         opacity: 1;
     }
 }

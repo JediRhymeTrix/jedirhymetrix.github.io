@@ -18,6 +18,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.14.0/devicon.min.css" />
     <!-- Bootup sequence shared constants and functions -->
     <script>
+            // Responsive breakpoints (matches Bootstrap)
+            const BREAKPOINTS = {
+                md: '(min-width: 768px)',  // Medium devices
+                lg: '(min-width: 992px)'   // Large devices (desktop)
+            };
+
         const BOOTUP_SEQUENCE = [
             "Booting up...",
             "Loading modules...",
@@ -52,8 +58,9 @@
             showNext();
         }
 
-        // Start title cycling immediately on desktop only (check viewport >= 992px, Bootstrap lg breakpoint)
-        if (window.innerWidth >= 992) {
+            // Start title cycling immediately on desktop only (using media query)
+            // 768px allows mobile devices in "desktop mode" to render the desktop version
+            if (window.matchMedia(BREAKPOINTS.md).matches) {
             const originalTitle = document.title;
             animateBootupSequence(
                 (text) => { document.title = text; },
